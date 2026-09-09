@@ -14,6 +14,8 @@ Closing Claude Desktop's window only hides it to the tray, so "is the window ope
 you nothing about whether dispatch works. This answers the question that actually
 matters — and acts on it.
 
+![Claude Bridge on the Omarchy bar: the menu open, and the three icon states](preview.png)
+
 > **Recommended: have a coding agent install this.** Setup touches your Hyprland
 > config — an autostart entry, a window rule and a keybinding — and those differ by
 > Hyprland version, by config layout (Lua vs `.conf`), and by which keys you already
