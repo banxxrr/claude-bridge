@@ -35,6 +35,23 @@ Item {
     var v = settings && settings.refreshIntervalSec ? settings.refreshIntervalSec : 5
     return Math.max(2, Math.min(300, v))
   }
+  readonly property bool autostart: boolSetting("autostart", true)
+  readonly property bool keepAlive: boolSetting("keepAlive", true)
+
+  function boolSetting(name, fallback) {
+    if (!settings) return fallback
+    var v = settings[name]
+    if (v === undefined || v === null) return fallback
+    if (typeof v === "string") return v === "true" || v === "1" || v === "yes"
+    return v ? true : false
+  }
+
+  // A quit from this widget is deliberate, so keepAlive must not immediately
+  // undo it. The suppression lasts until something launches the app again.
+  // Reported by status.sh from a shared file, so every monitor's instance of
+  // this widget agrees. Per-instance state did not work: only the instance you
+  // clicked knew about the quit, and its peers relaunched the app.
+  property bool suppressAutoLaunch: false
   readonly property string specialWorkspace: {
     var v = settings && settings.specialWorkspace ? settings.specialWorkspace : "claude"
     return String(v)
@@ -74,10 +91,20 @@ Item {
   function quit() {
     if (!running || actionProcess.running) return
     if (pid <= 0) return
-    var argv = ["kill", String(pid)]
+    var argv = ["sh", helperDir + "quit.sh", String(pid)]
     lastCommand = JSON.stringify(argv)
     actionProcess.command = argv
     actionProcess.running = true
+  }
+
+  // Called on every poll that finds Claude Desktop down. autostart covers the
+  // first sighting after login; keepAlive covers a later crash. Neither fires
+  // while a deliberate quit is being held, or inside the launch cooldown.
+  function superviseDown() {
+    if (suppressAutoLaunch) return
+    if (!autostart && !keepAlive) return
+    // launch.sh owns the cooldown, shared across instances.
+    launch()
   }
 
   function launch() {
@@ -114,12 +141,16 @@ Item {
           if (key === "dir") root.configDir = value
           else if (key === "running") root.running = value === "1"
           else if (key === "pid") root.pid = parseInt(value, 10) || 0
+          else if (key === "suppressed") root.suppressAutoLaunch = value === "1"
         }
-        if (root.running) root.readBridge()
-        else {
+        if (root.running) {
+          root.readBridge()
+
+        } else {
           root.bridgeEnabled = false
           root.bridgeReadable = false
           root.environmentId = ""
+          root.superviseDown()
         }
       }
     }

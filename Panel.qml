@@ -60,6 +60,7 @@ Panel {
     function lastcmd(): string { return claude.lastCommand }
     function menu(): string { root.toggle(); return "ok" }
     function isopen(): string { return root.opened ? "open" : "closed" }
+    function supervision(): string { return "autostart=" + claude.autostart + " keepAlive=" + claude.keepAlive + " suppressed=" + claude.suppressAutoLaunch }
   }
 
   BarIconButton {

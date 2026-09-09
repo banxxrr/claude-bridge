@@ -7,7 +7,11 @@
 # a binary name. A crash can leave the lock behind, so the pid is always
 # checked against /proc before it is believed.
 #
-# Prints: dir=<path> running=<0|1> pid=<n>
+# Prints: dir=<path> running=<0|1> pid=<n> suppressed=<0|1>
+#
+# "suppressed" reports the shared quit-hold: the user quit deliberately and
+# auto-restart must stay off. It clears itself once the app is seen running
+# under a different pid, i.e. something genuinely started it again.
 
 dir=""
 for d in "${XDG_CONFIG_HOME:-$HOME/.config}/Claude" \
@@ -39,15 +43,37 @@ if [ "$running" -eq 0 ]; then
   for candidate in $(pgrep -x claude-desktop 2>/dev/null); do
     exe=$(readlink "/proc/$candidate/exe" 2>/dev/null)
     case "$exe" in
-      *claude-desktop*)
-        running=1
-        pid=$candidate
-        break
-        ;;
+      *claude-desktop*) ;;
+      *) continue ;;
     esac
+    # Electron helpers share the binary and the name. Accept only a process
+    # whose parent is not itself claude-desktop, i.e. the main process. Without
+    # this, helpers still dying after a quit reported the app as running under
+    # a new pid, which upstream read as "someone restarted it".
+    ppid=$(awk '{print $4}' "/proc/$candidate/stat" 2>/dev/null)
+    parent=$(cat "/proc/$ppid/comm" 2>/dev/null)
+    [ "$parent" = "claude-desktop" ] && continue
+    running=1
+    pid=$candidate
+    break
   done
+fi
+
+hold="${XDG_RUNTIME_DIR:-/tmp}/claude-bridge/quit-hold"
+suppressed=0
+if [ -f "$hold" ]; then
+  held=$(cat "$hold" 2>/dev/null)
+  case "$held" in
+    ''|*[!0-9]*) held=0 ;;
+  esac
+  if [ "$running" -eq 1 ] && [ "$pid" -ne "$held" ]; then
+    rm -f "$hold"
+  else
+    suppressed=1
+  fi
 fi
 
 echo "dir=$dir"
 echo "running=$running"
 echo "pid=$pid"
+echo "suppressed=$suppressed"

@@ -4,9 +4,34 @@ An [Omarchy](https://omarchy.org/) bar widget that shows whether **Claude Deskto
 dispatch bridge is up** — that is, whether you can start a new Claude Code session
 from your phone or from claude.ai and have it run on this machine.
 
+It does not just report the state — it **keeps the bridge up**. Claude Desktop starts
+with your session, gets restarted if it dies, and stays reachable without you thinking
+about it. The icon is there so you can confirm it at a glance.
+
 Claude Desktop hides to the tray when you close its window, so "is the window open"
 tells you nothing about whether dispatch works. This widget answers the question that
 actually matters, and gives you the actions that change it.
+
+## Always on
+
+| Setting | Default | Behaviour |
+|---------|---------|-----------|
+| `autostart` | `true` | Starts Claude Desktop when the bar loads, i.e. every login |
+| `keepAlive` | `true` | Restarts it if it exits unexpectedly |
+
+**A deliberate quit is respected.** Quitting from the widget sets a hold, so `keepAlive`
+will not immediately undo what you asked for. The hold clears as soon as something
+starts Claude Desktop again — the menu, the autostart at your next login, or you
+launching it by hand.
+
+That state is a file under `$XDG_RUNTIME_DIR/claude-bridge/`, not memory, because a bar
+surface exists per monitor and each one supervises independently. On a multi-monitor
+setup, per-instance state means the copy you clicked stays quiet while its peers
+relaunch the app you just quit. The same directory holds a launch stamp so several
+instances noticing the outage on the same tick cannot each spawn a copy.
+
+Set either to `false` on the widget's entry in `~/.config/omarchy/shell.json` if you
+would rather manage Claude Desktop yourself.
 
 ## The icon
 

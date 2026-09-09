@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "id": "banxxrr.claude-bridge",
   "name": "Claude Bridge",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "banxxrr",
   "license": "MIT",
-  "description": "Shows whether the Claude Desktop bridge is up, so you can tell at a glance if this machine is reachable for dispatch from claude.ai or your phone. Click to show or hide the Claude window.",
+  "description": "Keeps Claude Desktop's dispatch bridge up so this machine is always reachable from claude.ai or your phone, and shows at a glance whether it is. Starts Claude Desktop with your session, restarts it if it dies, and gives you launch/quit/show-hide from the bar.",
   "kinds": [
     "bar-widget"
   ],
@@ -25,9 +25,23 @@
     "defaultSection": "right",
     "defaults": {
       "refreshIntervalSec": 5,
-      "specialWorkspace": "claude"
+      "specialWorkspace": "claude",
+      "autostart": true,
+      "keepAlive": true
     },
     "schema": [
+      {
+        "key": "autostart",
+        "type": "boolean",
+        "label": "Start Claude Desktop with the session",
+        "defaultValue": true
+      },
+      {
+        "key": "keepAlive",
+        "type": "boolean",
+        "label": "Restart it if it stops unexpectedly",
+        "defaultValue": true
+      },
       {
         "key": "refreshIntervalSec",
         "type": "integer",
