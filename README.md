@@ -16,23 +16,6 @@ matters — and acts on it.
 
 ![Claude Bridge on the Omarchy bar: the menu open, and the three icon states](preview.png)
 
-> **Recommended: have a coding agent install this.** Setup touches your Hyprland
-> config — an autostart entry, a window rule and a keybinding — and those differ by
-> Hyprland version, by config layout (Lua vs `.conf`), and by which keys you already
-> have bound. An agent reconciles that against your actual machine; a copy-pasted
-> snippet cannot.
->
-> Point Claude Code at this repo and say:
->
-> ```
-> Install https://github.com/banxxrr/claude-bridge and follow its SETUP.md
-> ```
->
-> [SETUP.md](SETUP.md) is written for that: it states the desired end state and the
-> constraints rather than a fixed list of commands. Prefer to do it by hand? See
-> [Install](#install) below — `./setup.sh --dry-run` prints every change before it
-> makes one.
-
 ## Always on
 
 | Setting | Default | Behaviour |
@@ -151,7 +134,42 @@ Run the installer, which is idempotent and can preview itself:
 
 It detects Lua vs `.conf` Hyprland layouts, refuses to clobber an existing
 keybinding, and validates with `hyprctl configerrors` before reporting success.
-For a manual or agent-driven setup, see [SETUP.md](SETUP.md).
+
+### Doing it by hand
+
+Omarchy on Hyprland 0.55+ uses Lua, with personal overrides in `~/.config/hypr/`
+loaded after the defaults. Add one line to each file:
+
+| File | Line |
+|------|------|
+| `autostart.lua` | `o.launch_on_start("claude-desktop")` |
+| `hyprland.lua` | `o.window("com.anthropic.Claude", { workspace = "special:claude silent" })` |
+| `bindings.lua` | `o.bind("SUPER + ALT + C", "Toggle Claude Desktop", hl.dsp.workspace.toggle_special("claude"))` |
+
+On an older `.conf` install:
+
+```conf
+exec-once = claude-desktop
+windowrulev2 = workspace special:claude silent, class:^(com\.anthropic\.Claude)$
+bind = SUPER ALT, C, togglespecialworkspace, claude
+```
+
+Check `omarchy menu keybindings --print` first — on a stock Omarchy `SUPER + C` is
+Universal copy and `SUPER + SHIFT + C` is Calendar, which is why the default here is
+`SUPER + ALT + C`. Then reload and confirm the config is clean:
+
+```sh
+hyprctl reload && hyprctl configerrors
+```
+
+The window's Wayland `app_id` is `com.anthropic.Claude`, from the `StartupWMClass` in
+`com.anthropic.Claude.desktop`. To confirm it worked, Claude Desktop should be parked
+and hidden after a restart:
+
+```sh
+hyprctl clients -j | jq '.[] | select(.class=="com.anthropic.Claude") | .workspace.name'
+# → "special:claude"
+```
 
 
 This action toggles a Hyprland **special workspace**, which keeps Claude Desktop alive
