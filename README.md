@@ -1,16 +1,18 @@
 # Claude Bridge
 
-An [Omarchy](https://omarchy.org/) bar widget that shows whether **Claude Desktop's
-dispatch bridge is up** — that is, whether you can start a new Claude Code session
-from your phone or from claude.ai and have it run on this machine.
+**Keeps this machine reachable for Claude Code dispatch** — so you can start a new
+session from your phone or from claude.ai and have it run here, without setting
+anything up first.
 
-It does not just report the state — it **keeps the bridge up**. Claude Desktop starts
-with your session, gets restarted if it dies, and stays reachable without you thinking
-about it. The icon is there so you can confirm it at a glance.
+Claude Desktop is what hosts that bridge, so the bridge is only up while it is running.
+This plugin makes sure it is: it starts Claude Desktop with your session, brings it back
+if it dies, and parks its window on a hidden workspace rather than quitting it to get it
+out of the way. A bar icon confirms the bridge is live at a glance, and a menu gives you
+launch, quit, and show/hide.
 
-Claude Desktop hides to the tray when you close its window, so "is the window open"
-tells you nothing about whether dispatch works. This widget answers the question that
-actually matters, and gives you the actions that change it.
+Closing Claude Desktop's window only hides it to the tray, so "is the window open" tells
+you nothing about whether dispatch works. This answers the question that actually
+matters — and acts on it.
 
 ## Always on
 
