@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "banxxrr.claude-bridge",
   "name": "Claude Bridge",
-  "version": "0.2.0",
-  "author": "banxxrr",
+  "version": "0.3.0",
+  "author": "banxxr",
   "license": "MIT",
   "description": "Keeps Claude Desktop's dispatch bridge up so this machine is always reachable from claude.ai or your phone, and shows at a glance whether it is. Starts Claude Desktop with your session, restarts it if it dies, and gives you launch/quit/show-hide from the bar.",
   "kinds": [

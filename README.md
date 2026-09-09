@@ -90,6 +90,32 @@ Then place it on the bar if it did not land where you want:
 omarchy bar move banxxrr.claude-bridge --section right
 ```
 
+## Removing it
+
+```sh
+omarchy plugin remove banxxrr.claude-bridge
+```
+
+That takes the widget off the bar and deletes the plugin. It does not touch the
+Hyprland config, so if you ran `setup.sh`, undo those three blocks too — each is
+tagged with a `claude-bridge` comment, and `setup.sh` left a timestamped `.bak`
+beside every file it edited:
+
+```sh
+grep -rn claude-bridge ~/.config/hypr/*.lua
+```
+
+Nothing else persists. The only runtime state is `$XDG_RUNTIME_DIR/claude-bridge/`,
+which is cleared on reboot, and Claude Desktop itself is left installed and running.
+
+## Dependencies
+
+Beyond the Omarchy shell and Claude Desktop, the helpers use only standard
+userland: `sh`, `pgrep`, `readlink`, `awk`, `stat`, `date`, `kill`, and `hyprctl`
+for the workspace toggle. Launching prefers `uwsm-app` when the session provides
+it, and falls back to `gtk-launch` or `flatpak` depending on how Claude Desktop
+was installed. No runtime, interpreter, or library is bundled or required.
+
 ## Compatibility
 
 **Claude Desktop — install method independent.** Detection reads Electron's
