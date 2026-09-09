@@ -14,6 +14,23 @@ Closing Claude Desktop's window only hides it to the tray, so "is the window ope
 you nothing about whether dispatch works. This answers the question that actually
 matters — and acts on it.
 
+> **Recommended: have a coding agent install this.** Setup touches your Hyprland
+> config — an autostart entry, a window rule and a keybinding — and those differ by
+> Hyprland version, by config layout (Lua vs `.conf`), and by which keys you already
+> have bound. An agent reconciles that against your actual machine; a copy-pasted
+> snippet cannot.
+>
+> Point Claude Code at this repo and say:
+>
+> ```
+> Install https://github.com/banxxrr/claude-bridge and follow its SETUP.md
+> ```
+>
+> [SETUP.md](SETUP.md) is written for that: it states the desired end state and the
+> constraints rather than a fixed list of commands. Prefer to do it by hand? See
+> [Install](#install) below — `./setup.sh --dry-run` prints every change before it
+> makes one.
+
 ## Always on
 
 | Setting | Default | Behaviour |
