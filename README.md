@@ -160,6 +160,7 @@ omarchy restart shell
 omarchy-shell banxxrr.claude-bridge.control status       # human-readable state
 omarchy-shell banxxrr.claude-bridge.control environment  # dispatch environment id
 omarchy-shell banxxrr.claude-bridge.control lastcmd      # exact argv of the last action
+omarchy-shell banxxrr.claude-bridge.control supervision  # autostart/keepAlive, and whether a quit is being held
 omarchy-shell banxxrr.claude-bridge.control launch       # launch / quit / toggle / refresh
 ```
 

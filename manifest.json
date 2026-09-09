@@ -14,7 +14,7 @@
   },
   "barWidget": {
     "displayName": "Claude Bridge",
-    "description": "Claude Desktop dispatch bridge status, with a click to toggle the window.",
+    "description": "Keeps Claude Desktop up so you can start sessions here from your phone",
     "category": "AI",
     "aliases": [
       "claude",
