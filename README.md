@@ -35,7 +35,7 @@ window* and *Quit Claude Desktop* when it is up.
 ## Install
 
 ```sh
-omarchy plugin add https://github.com/<you>/claude-bridge.git --enable
+omarchy plugin add https://github.com/banxxrr/claude-bridge.git --enable
 ```
 
 Then place it on the bar if it did not land where you want:
